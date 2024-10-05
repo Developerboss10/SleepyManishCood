@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleepy Manish Coordination Compounds Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #74ebd5, #acb6e5); /* Gradient background */
+            margin: 0;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+        h1 {
+            text-align: center;
+            color: #87CEEB; /* Light sky blue title color */
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s, color 0.3s;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .score {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+        .contact {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #555;
+        }
+        .dark-mode {
+            background-color: #333;
+            color: white;
+        }
+        .dark-mode .container {
+            background: #444;
+        }
+        .toggle-button {
+            margin: 10px 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Sleepy Manish Coordination Compounds Quiz</h1>
+
+    <button class="toggle-button" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+        <span id="modeIcon">🌙</span> <!-- Moon icon for Dark Mode -->
+    </button>
+
+    <form id="quizForm">
+        <div id="questionsContainer"></div>
+        <button type="button" onclick="calculateScore()">Show Score</button>
+    </form>
+    <div class="score" id="scoreDisplay"></div>
+
+    <div class="contact">
+        <p>Contact us: <a href="mailto:manish5454@gmail.com">manish5454@gmail.com</a></p>
+        <p>&copy; 2024 All rights reserved</p>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        // Sample questions for Single Correct (10)
+        { question: "Question 1: What is the oxidation state of chromium in [Cr(NH3)6]Cl3?", options: ["+3", "+2", "+6", "0"], answer: 0 },
+        { question: "Question 2: What is the geometry of [Ag(NH3)2]+?", options: ["Linear", "Tetrahedral", "Square Planar", "Trigonal Planar"], answer: 0 },
+        { question: "Question 3: Which ligand is a strong field ligand?", options: ["I-", "F-", "Cl-", "CN-"], answer: 3 },
+        { question: "Question 4: Identify the coordination number of [Co(NH3)6]3+.", options: ["2", "4", "6", "8"], answer: 2 },
+        { question: "Question 5: Which compound is an example of a bimetallic complex?", options: ["[Ni(CO)4]", "[Cu(NH3)4]Cl2", "[Fe(CN)6]3-", "[Cr(H2O)6]3+"], answer: 1 },
+        { question: "Question 6: What is the color of the complex [Cu(NH3)4]2+?", options: ["Blue", "Green", "Yellow", "Red"], answer: 0 },
+        { question: "Question 7: Which is a neutral ligand?", options: ["H2O", "NH4+", "Na+", "Cl-"], answer: 0 },
+        { question: "Question 8: The complex [Co(NH3)5Cl]Cl2 is __________.", options: ["Diamagnetic", "Paramagnetic", "Colorless", "Odorless"], answer: 1 },
+        { question: "Question 9: What type of isomerism does [CoCl2(NH3)4] exhibit?", options: ["Geometric", "Optical", "Structural", "All of the above"], answer: 0 },
+        { question: "Question 10: Which of the following is a chelating agent?", options: ["NH3", "H2O", "EDTA", "Cl-"], answer: 2 },
+
+        // Sample questions for Integer Type (10)
+        { question: "Integer Question 1: What is the total oxidation state of the complex ion in [Ni(CO)4]?", answer: 0 },
+        { question: "Integer Question 2: How many unpaired electrons are present in [Fe(H2O)6]2+?", answer: 4 },
+        { question: "Integer Question 3: Calculate the coordination number of [Mn(CN)6]4-.", answer: 6 },
+        { question: "Integer Question 4: How many d-electrons does [Cr(H2O)6]3+ have?", answer: 3 },
+        { question: "Integer Question 5: What is the oxidation state of iron in [Fe(CO)5]?", answer: 0 },
+        { question: "Integer Question 6: What is the charge on the complex [Cu(NH3)4(H2O)2]2+?", answer: 2 },
+        { question: "Integer Question 7: In [CrCl3(H2O)3], what is the coordination number?", answer: 6 },
+        { question: "Integer Question 8: How many geometrical isomers can exist for [Co(NH3)4Cl2]+?", answer: 2 },
+        { question: "Integer Question 9: Determine the number of optical isomers for [Co(en)3]3+.", answer: 2 },
+        { question: "Integer Question 10: What is the number of π-acceptor ligands in [Ru(CO)4Cl2]?", answer: 4 },
+
+        // Sample questions for Multi-Correct (10)
+        { question: "Multi-Correct Question 1: Select the strong field ligands. (Choose multiple)", options: ["CN-", "F-", "CO", "Cl-"], answers: [0, 2] },
+        { question: "Multi-Correct Question 2: Coordinating capability of which can form chelates? (Choose multiple)", options: ["EDTA", "NH3", "Acac", "Cl-"], answers: [0, 2] },
+        { question: "Multi-Correct Question 3: Identifying the factors affecting colors of complexes. (Choose multiple)", options: ["Ligand field", "Metal ion", "Oxidation state", "None"], answers: [0, 1, 2] },
+        { question: "Multi-Correct Question 4: Identify coordinate bond forming ligands. (Choose multiple)", options: ["Water", "Ammonia", "Sodium", "Potassium"], answers: [0, 1] },
+        { question: "Multi-Correct Question 5: Choose all that are true about coordination complexes. (Choose multiple)", options: ["Contain a central atom", "Form coordinate bonds", "Are always colored", "Can have geometric isomerism"], answers: [0, 1, 3] },
+        { question: "Multi-Correct Question 6: Which can serve as Lewis bases in coordination? (Choose multiple)", options: ["NH3", "CO", "H2O", "O2"], answers: [0, 2] },
+        { question: "Multi-Correct Question 7: Select the entities that have coordination numbers of 6. (Choose multiple)", options: ["[Ni(H2O)6]2+", "[Cr(H2O)6]3+", "[Co(NH3)6]3+", "[Ag(NH3)2]+", "[Cu(H2O)4]2+"], answers: [0, 1, 2] },
+        { question: "Multi-Correct Question 8: Identify the charge carriers in ionic compounds. (Choose multiple)", options: ["Cations", "Anions", "Neutral molecules", "Electrons"], answers: [0, 1] },
+        { question: "Multi-Correct Question 9: Select the ligands that can act as bidentate. (Choose multiple)", options: ["EDTA", "H2O", "Glycine", "Acetylacetonate"], answers: [0, 2, 3] },
+        { question: "Multi-Correct Question 10: Which of the following can show optical isomerism? (Choose multiple)", options: ["[Co(en)3]3+", "[Cr(NH3)6]3+", "[Ni(CO)4]", "[Fe(CN)6]4-"], answers: [0, 1] }
+    ];
+
+    function loadQuestions() {
+        const container = document.getElementById("questionsContainer");
+        questions.forEach((q, index) => {
+            const div = document.createElement("div");
+            div.classList.add("question");
+            if (index < 10) {
+                div.innerHTML = `<h4>${q.question}</h4>
+                ${q.options ? q.options.map((opt, i) => `
+                <label>
+                    <input type="radio" name="q${index}" value="${i}"> ${opt}
+                </label><br>`).join('') : ''}`;
+            } else if (index < 20) {
+                div.innerHTML = `<h4>${q.question}</h4>
+                <input type="number" name="q${index}" placeholder="Enter your answer (Integer)" />`;
+            } else {
+                div.innerHTML = `<h4>${q.question}</h4>
+                ${q.options.map((opt, i) => `
+                <label>
+                    <input type="checkbox" name="q${index}" value="${i}"> ${opt}
+                </label><br>`).join('')}`;
+            }
+            container.appendChild(div);
+        });
+    }
+
+    function calculateScore() {
+        let score = 0;
+        questions.forEach((q, index) => {
+            const inputName = `q${index}`;
+            const inputs = document.getElementsByName(inputName);
+            let selectedAnswers = [];
+            
+            if (index < 10) { // Multiple choice
+                inputs.forEach(input => {
+                    if (input.checked) {
+                        selectedAnswers.push(parseInt(input.value));
+                    }
+                });
+                if (selectedAnswers[0] === q.answer) {
+                    score += 4;
+                } else {
+                    score -= 1;
+                }
+            } else if (index < 20) { // Integer type
+                const userAnswer = parseInt(document.querySelector(`input[name="${inputName}"]`).value);
+                if (userAnswer === q.answer) {
+                    score += 4;
+                } else {
+                    score -= 1;
+                }
+            } else { // Multi-correct
+                const correctAnswers = q.answers;
+                inputs.forEach(input => {
+                    if (input.checked) {
+                        selectedAnswers.push(parseInt(input.value));
+                    }
+                });
+                const numCorrect = correctAnswers.filter(answer => selectedAnswers.includes(answer)).length;
+                if (numCorrect > 0) {
+                    score += 4 * numCorrect; // 4 points per correct response
+                }
+                const numWrong = selectedAnswers.length - numCorrect;
+                score -= numWrong; // -1 for each incorrect selection
+            }
+        });
+
+        document.getElementById("scoreDisplay").innerText = `Your total score is: ${score}`;
+
+        // Popup message based on score
+        if (score < 50) {
+            alert("You are not pass This Test☹️ Try again");
+        } else if (score > 59) {
+            alert("Great! You are pass the Test 🎉😊");
+        }
+    }
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const modeIcon = document.getElementById("modeIcon");
+        modeIcon.innerHTML = modeIcon.innerHTML === "🌑" ? "🌞" : "🌑"; // Toggle icons
+    }
+
+    loadQuestions(); // Initialize questions when the page loads
+</script>
+
+</body>
+</html>
